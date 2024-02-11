@@ -30,7 +30,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.users');
+         $user = User::all();
+        return view('users.users',['users' => $user]);
     }
 
     /**
@@ -71,7 +72,11 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+
+         $user = User::findOrFail($id);
+        $users = User::all();
+        return view('users.users', ['user_details' => $user, 'users' => $users]);
+
     }
 
     /**
