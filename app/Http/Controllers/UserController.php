@@ -48,10 +48,18 @@ class UserController extends Controller
 
 
 
-        $user = User::create([
+
+
+       if( $request ->hasFile('image')){
+
+            $path = $request->file('image')->store('images');
+
+         }
+         $user = User::create([
             'name' =>  $validate['name'],
             'address' =>  $validate['address'],
             'gender' =>  $validate['gender'],
+            'image' =>  $path,
         ]);
 
         return redirect()->route('users.index', ['users' => $user->id]);

@@ -34,17 +34,15 @@
                 <tbody>
 
 
-                    @foreach ($users ?? []  as $key => $user)
-
-
+                    @foreach ($users ?? [] as $key => $user)
                         <tr>
-                            <th scope="row">{{ $key+1 }}</th>
+                            <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $user->name ?? '' }}</td>
 
-                            <td>{{ $user->image ?? ''}}</td>
-                             <td>{{ $user->address ?? '' }}</td>
+                            <td ><div style="background-image: url('{{ Storage::url($user->image) }}');min-height:100px; text-align:center;"></div></td>
+                            <td>{{ $user->address ?? '' }}</td>
 
-                            <td>{{ $user->gender == 1 ? 'Male' :'Female' }}</td>
+                            <td>{{ $user->gender == 1 ? 'Male' : 'Female' }}</td>
                             <td>
                                 <button class="btn btn-primary"><a
                                         href="{{ route('users.edit', ['user' => $user->id ?? '']) }}"> UPDATE</a>
@@ -74,7 +72,8 @@
     </div>
     <div class="container">
         <div class="row">
-            <form name="registration_form" accept="{{ route('users.store') }}" id="registration_form" method="POST" enctype="multipart/form-data">
+            <form name="registration_form" accept="{{ route('users.store') }}" id="registration_form" method="POST"
+                enctype="multipart/form-data">
                 @csrf
 
 
@@ -83,8 +82,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Name</label>
-                            <input type="text" name="name" class="form-control" placeholder="Name"
-                                value="">
+                            <input type="text" name="name" class="form-control" placeholder="Name" value="">
 
                         </div>
                         @error('name')
@@ -114,8 +112,8 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="gender" id="exampleRadios1" value="1"
-                            >
+                        <input class="form-check-input" type="radio" name="gender" id="exampleRadios1"
+                            value="1">
                         <label class="form-check-label" for="exampleRadios1">
                             Male
                         </label>
