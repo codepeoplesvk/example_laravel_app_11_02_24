@@ -39,28 +39,34 @@
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $user->name ?? '' }}</td>
 
-                            <td ><div style="background-image: url('{{ Storage::url($user->image) }}');min-height:100px; text-align:center;"></div></td>
+                            <td>
+                                <div
+                                    style="background-image: url('{{ Storage::url($user->image) }}');min-height:100px; text-align:center;">
+                                </div>
+                            </td>
                             <td>{{ $user->address ?? '' }}</td>
 
                             <td>{{ $user->gender == 1 ? 'Male' : 'Female' }}</td>
                             <td>
-                                <button class="btn btn-primary"><a
-                                        href="{{ route('users.edit', ['user' => $user->id ?? '']) }}"> UPDATE</a>
+                                <a href="{{ route('users.edit', ['user' => $user->id ?? '']) }}"
+                                    class="btn btn-primary"> Update</a>
 
 
-                                </button>
-                            </td>
-                            <td>
+
                                 <form action="{{ route('users.destroy', ['user' => $user->id ?? '']) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
 
-                                    <input type="submit" value="Delete" class="btn btn-primary">
+                                    <input type="submit" value="Delete" class="btn btn-danger">
 
 
                                 </form>
+                                <a href="{{ route('users.edit', ['user' => $user->id ?? '']) }}" class="btn btn-info"> View</a>
+
+
 
                             </td>
+
 
 
                         </tr>
