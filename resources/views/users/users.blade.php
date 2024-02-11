@@ -1,16 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Example App</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <script src="{{ asset('js/app.js') }}"></script>
-</head>
-
-<body>
+@extends('layouts.app')
+@section('title', 'One Page App')
+@section('content')
     <div class="card text-center">
         <div class="card-header">
             Users
@@ -48,8 +38,8 @@
 
                             <td>{{ $user->gender == 1 ? 'Male' : 'Female' }}</td>
                             <td>
-                                <a href="{{ route('users.edit', ['user' => $user->id ?? '']) }}"
-                                    class="btn btn-primary"> Update</a>
+                                <a href="{{ route('users.edit', ['user' => $user->id ?? '']) }}" class="btn btn-primary">
+                                    Edit</a>
 
 
 
@@ -61,7 +51,8 @@
 
 
                                 </form>
-                                <a href="{{ route('users.edit', ['user' => $user->id ?? '']) }}" class="btn btn-info"> View</a>
+                                <a href="{{ route('users.edit', ['user' => $user->id ?? '']) }}" class="btn btn-info">
+                                    View</a>
 
 
 
@@ -78,71 +69,81 @@
     </div>
     <div class="container">
         <div class="row">
-            <form name="registration_form" accept="{{ route('users.store') }}" id="registration_form" method="POST"
-                enctype="multipart/form-data">
-                @csrf
+            @if ($user_info ?? '')
+                <form action="{{ route('users.update', ['user' => $user_info->id]) }}" method="POST"
+                    enctype="multipart/form-data">
+                    @method('PUT')
+                @else
+                    <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
+            @endif
+            @csrf
 
 
-                <div class="row p-8">
+            <div class="row p-8">
 
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Name</label>
-                            <input type="text" name="name" class="form-control" placeholder="Name" value="">
-
-                        </div>
-                        @error('name')
-                            <div class="alert alert-danger"> {{ $message }}</div>
-                        @enderror
-                        <div class="form-group">
-
-                            <div class="col 3">
-                                <label>Image </label>
-                                <input type="file" name="image" class="form-control-file">
-                            </div>
-                            @error('image')
-                                <div class="alert alert-danger"> {{ $message }}</div>
-                            @enderror
-
-                        </div>
-
-                        <div class="form-group">
-                            <label>Address</label>
-                            <textarea class="form-control" name="address" rows="3"></textarea>
-                        </div>
-                        @error('address')
-                            <div class="alert alert-danger"> {{ $message }}</div>
-                        @enderror
-
-                    </div>
-                </div>
                 <div class="col-md-6">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="gender" id="exampleRadios1"
-                            value="1">
-                        <label class="form-check-label" for="exampleRadios1">
-                            Male
-                        </label>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Name</label>
+                        <input type="text" name="name" class="form-control" placeholder="Name"
+                            value="{{ $user_info->name ?? '' }}">
+
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="gender" id="exampleRadios2"
-                            value="2">
-                        <label class="form-check-label" for="exampleRadios2">
-                            Female
-                        </label>
+                    @error('name')
+                        <div class="alert alert-danger"> {{ $message }}</div>
+                    @enderror
+                    <div class="form-group">
+
+                        <div class="col 3">
+                            <label>Image </label>
+                            <input type="file" name="image" class="form-control-file">
+                        </div>
+                        @error('image')
+                            <div class="alert alert-danger"> {{ $message }}</div>
+                        @enderror
+
                     </div>
-                    @error('gender')
+                    <div class="col-4">
+                        <img src="{{ ($user_info->image ?? '') != null ? Storage::url($user_info->image) : '' }}"
+                            class="img-thumbnail avatar" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea class="form-control" name="address" rows="3">{{ $user_info->address ?? '' }}</textarea>
+                    </div>
+                    @error('address')
                         <div class="alert alert-danger"> {{ $message }}</div>
                     @enderror
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <input type="submit" name="submit" class="btn btn-success submitBtn" value="SUBMIT" />
-                        </div>
-                    </div>
-            </form>
-        </div>
-    </div>
-</body>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender"
+                        {{ ($user_info->gender ?? '') == 1 ? 'checked' : '' }} id="exampleRadios1" value="1">
+                    <label class="form-check-label" for="exampleRadios1">
+                        Male
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender"
+                        {{ ($user_info->gender ?? '') == 2 ? 'checked' : '' }} id="exampleRadios2" value="2">
+                    <label class="form-check-label" for="exampleRadios2">
+                        Female
+                    </label>
+                </div>
+                @error('gender')
+                    <div class="alert alert-danger"> {{ $message }}</div>
+                @enderror
 
-</html>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="submit" name="submit" class="btn btn-success submitBtn"
+                            value="{{ ($user_info ?? '') == '' ? 'Submit' : 'Update' }}" />
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+
+    @endsection

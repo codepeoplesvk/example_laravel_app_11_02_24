@@ -21,7 +21,6 @@ class UserController extends Controller
 
 
         return view('users.users', ['users' => $user]);
-
     }
 
     /**
@@ -50,12 +49,11 @@ class UserController extends Controller
 
 
 
-       if( $request ->hasFile('image')){
+        if ($request->hasFile('image')) {
 
             $path = $request->file('image')->store('images');
-
-         }
-         $user = User::create([
+        }
+        $user = User::create([
             'name' =>  $validate['name'],
             'address' =>  $validate['address'],
             'gender' =>  $validate['gender'],
@@ -84,7 +82,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::findOrFail($id);
+        $users = User::all();
+        return view('users.users', ['user_info' => $user, 'users' => $users]);
     }
 
     /**
@@ -94,9 +94,19 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
-        //
+
+        $user = User::findOrFail($id);
+        $validated = $request->validated();
+        $user->fill($validated);
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('images');
+            $user->image = $path;
+        }
+        $user->save();
+        $users = User::all();
+        return view('users.users', ['users' => $users]);
     }
 
     /**
